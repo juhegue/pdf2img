@@ -19,7 +19,7 @@ AMPLIA = 1
 
 
 def pdf_to_text_image(pdf_path, output_image_path, amplia):
-    image_tmp = os.path.join(tempfile.gettempdir(), next(tempfile._get_candidate_names())) + '.png'
+    image_tmp = os.path.join(tempfile.gettempdir(), next(tempfile._get_candidate_names())) + ".png"
 
     pdf_document = fitz.open(pdf_path)
 
@@ -35,26 +35,20 @@ def pdf_to_text_image(pdf_path, output_image_path, amplia):
     xizq = ysup = xder = yinf = None
     for word in words:
         x_izq, y_sup, x_der, y_inf, texto, a, b, c = word
+        yinf = y_inf
         if xizq is None:
             xizq = x_izq
-            ysup = y_sup
             xder = x_der
-            yinf = y_inf
-
-        if xizq > x_izq:
-            xizq = x_izq
-
-        if ysup > y_sup:
             ysup = y_sup
+        else:
+            if xizq > x_izq:
+                xizq = x_izq
 
-        if x_der > xder:
-            xder = x_der
-
-        if yinf < y_inf:
-            yinf = y_inf
+            if x_der > xder:
+                xder = x_der
 
     if xizq is None:
-        img = Image.new('RGB', (1, 1), (255, 255, 255))
+        img = Image.new("RGB", (1, 1), (255, 255, 255))
         img.save(output_image_path)
     else:
         img_crop = image.crop((xizq*amplia, ysup*amplia, xder*amplia, yinf*amplia))
